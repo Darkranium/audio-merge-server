@@ -19,7 +19,7 @@ app.post("/upload-audio", upload.single("file"), (req, res) => {
 // Merge all uploaded MP3s and return the merged result
 app.post("/merge-audio", (req, res) => {
   const uploadDir = "uploads/";
-  const files = fs.readdirSync(uploadDir).filter(f => f.endsWith(".mp3"));
+  const files = fs.readdirSync(uploadDir).filter(f => fs.statSync(path.join(uploadDir, f)).isFile());
 
   if (files.length === 0) {
     return res.status(400).json({ error: "No files to merge" });
