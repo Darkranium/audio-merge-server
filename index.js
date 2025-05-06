@@ -13,17 +13,12 @@ app.post("/upload-audio", upload.single("file"), (req, res) => {
     return res.status(400).json({ error: "No file uploaded" });
   }
 
-  const originalName = req.file.originalname;
-  const targetPath = path.join("uploads", originalName);
+  const ext = path.extname(req.file.originalname) || ".mp3";
+  const newPath = path.join(req.file.destination, req.file.filename + ext);
 
-  fs.rename(req.file.path, targetPath, (err) => {
-    if (err) {
-      console.error("Rename error:", err);
-      return res.status(500).json({ error: "Could not save file" });
-    }
+  fs.renameSync(req.file.path, newPath);
 
-    res.status(200).json({ success: true, file: originalName });
-  });
+  res.status(200).json({ success: true, file: path.basename(newPath) });
 });
 
 // Merge all uploaded MP3s in proper order: data_2, data_4, ...
