@@ -51,6 +51,11 @@ app.post("/merge-audio", (req, res) => {
   });
 });
 
+app.get("/debug-uploads", (req, res) => {
+  const files = fs.readdirSync("uploads");
+  res.json({ files });
+});
+
 // Health check
 app.get("/", (req, res) => {
   res.send("🎧 Audio Merge API is running!");
