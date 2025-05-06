@@ -13,9 +13,7 @@ app.post("/upload-audio", upload.single("file"), (req, res) => {
     return res.status(400).json({ error: "No file uploaded" });
   }
 
-  const ext = path.extname(req.file.originalname) || ".mp3";
-  const newPath = path.join(req.file.destination, req.file.filename + ext);
-
+  const newPath = path.join(req.file.destination, req.file.originalname);
   fs.renameSync(req.file.path, newPath);
 
   res.status(200).json({ success: true, file: path.basename(newPath) });
