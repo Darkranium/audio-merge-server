@@ -9,11 +9,13 @@ const upload = multer({ dest: "uploads/" });
 
 // Upload endpoint – saves file with original name like 'data_2.mp3'
 app.post("/upload-audio", upload.single("file"), (req, res) => {
-  if (!req.file) {
-    return res.status(400).json({ error: "No file uploaded" });
+  const originalName = req.query.filename;
+
+  if (!req.file || !originalName) {
+    return res.status(400).json({ error: "No file or filename provided" });
   }
 
-  const newPath = path.join(req.file.destination, req.file.originalname);
+  const newPath = path.join(req.file.destination, originalName);
   fs.renameSync(req.file.path, newPath);
 
   res.status(200).json({ success: true, file: path.basename(newPath) });
